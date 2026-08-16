@@ -5,12 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Digital Tsanawiyah</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-sm w-full">
-        <h1 class="text-2xl font-bold text-blue-600 mb-2">Laporan Digital</h1>
-        <p class="text-gray-600 text-sm mb-6">Mts / Tsanawiyah System</p>
-        <p class="text-green-600 font-semibold">Repository & Pages Berhasil Aktif! 🎉</p>
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Laporan Digital Tsanawiyah</h2>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" required class="w-full mt-1 p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" required class="w-full mt-1 p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Masuk</button>
+        </form>
+
+        <p id="message" class="mt-4 text-center text-sm font-medium"></p>
     </div>
+
+    <script>
+        // Inisialisasi Supabase
+        const SUPABASE_URL = 'https://xojowaoabsllfzpskvgt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhvam93YW9hYnNsbGZ6cHNrdmd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4NDc0NzIsImV4cCI6MjEwMjQyMzQ3Mn0._3mRQIIuDEYzcUXTQaCf4kH4voo0skRwt4iOoWKDt-4'; 
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Logic Form Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+
+            messageEl.textContent = 'Memproses...';
+            messageEl.className = 'mt-4 text-center text-sm font-medium text-gray-600';
+
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                messageEl.textContent = 'Login Gagal: ' + error.message;
+                messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+            } else {
+                messageEl.textContent = 'Login Berhasil! Selamat datang.';
+                messageEl.className = 'mt-4 text-center text-sm font-medium text-green-600';
+            }
+        });
+    </script>
 </body>
 </html>
